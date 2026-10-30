@@ -6,4 +6,8 @@ Comparing a randomized algorithm (Karger's contraction) against a deterministic 
 Individual project. Primary author of both algorithms: Laz.
 
 ## Build & run
-(filled in as commands become real)
+### Tests
+```
+g++ -std=c++23 -O2 -Wall -Wextra tests/test_brute_force.cpp -o build/test_brute_force
+./build/test_brute_force
+```
