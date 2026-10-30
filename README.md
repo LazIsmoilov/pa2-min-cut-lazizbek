@@ -11,3 +11,7 @@ Individual project. Primary author of both algorithms: Laz.
 g++ -std=c++23 -O2 -Wall -Wextra tests/test_brute_force.cpp -o build/test_brute_force
 ./build/test_brute_force
 ```
+```
+g++ -std=c++23 -O2 -Wall -Wextra tests/test_karger.cpp -o build/test_karger
+./build/test_karger
+```
