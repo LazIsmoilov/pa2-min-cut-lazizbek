@@ -56,6 +56,25 @@ int main() {
         report("trial count for n=9.5e8 stays positive (no overflow)", t > 0);
     }
 
+    // Stoer-Wagner attack (limits section): an endpoint outside [0, n) is
+    // accepted by addEdge and later writes outside the weight matrix.
+    // A self-loop breaks the "no self-loops" contract in graph.hpp.
+    // Both must be rejected when the edge is added.
+    {
+        report("addEdge rejects endpoint >= n", throwsInvalidArgument([] {
+                   Graph g{3, {}};
+                   g.addEdge(0, 3);
+               }));
+        report("addEdge rejects negative endpoint", throwsInvalidArgument([] {
+                   Graph g{3, {}};
+                   g.addEdge(-1, 2);
+               }));
+        report("addEdge rejects self-loop", throwsInvalidArgument([] {
+                   Graph g{3, {}};
+                   g.addEdge(1, 1);
+               }));
+    }
+
     // Bug 1: n = 0 segfaulted inside union-find. Run last, because before the
     // fix this crashes the whole test binary.
     {
