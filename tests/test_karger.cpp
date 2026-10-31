@@ -80,7 +80,7 @@ int main() {
         Graph g{n, {}};
         for (int i = 0; i < n; ++i) g.addEdge(i, (i + 1) % n);
         std::mt19937_64 rng(6);
-        std::vector<int> order;
+        std::vector<size_t> order;
         int bad = 0;
         for (int t = 0; t < trials; ++t) {
             MinCutResult r = kargerTrial(g, rng, order);

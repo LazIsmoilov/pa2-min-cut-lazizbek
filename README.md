@@ -25,3 +25,9 @@ g++ -std=c++23 -O2 -Wall -Wextra tests/test_stoer_wagner.cpp -o build/test_sw
 g++ -std=c++23 -O2 -Wall -Wextra scripts/trace_sw.cpp -o build/trace_sw
 ./build/trace_sw
 ```
+
+### Attack-prompt regression tests (see ai-logs/attack-karger.md)
+```
+g++ -std=c++23 -O2 -Wall -Wextra tests/test_attack.cpp -o build/test_attack
+./build/test_attack
+```

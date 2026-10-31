@@ -21,13 +21,17 @@
 #include <cstdint>
 #include <cstdio>
 #include <limits>
+#include <stdexcept>
 #include <vector>
 
 #include "graph.hpp"
 
 // If trace is non-null, each phase's order and cut are printed to it
 // (used for the hand-trace in notes.md; off in tests and benchmarks).
+// Throws std::invalid_argument if n < 2: no cut exists, and without this
+// check the phase loop never runs and it returns INT64_MAX with an empty side.
 inline MinCutResult stoerWagnerMinCut(const Graph& g, FILE* trace = nullptr) {
+    if (g.n < 2) throw std::invalid_argument("min cut needs n >= 2");
     const int n = g.n;
 
     // Weight matrix, flattened. Parallel edges add up.
