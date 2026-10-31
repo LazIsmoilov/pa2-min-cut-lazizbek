@@ -2,6 +2,7 @@
 // Undirected, unweighted multigraph: parallel edges allowed, self-loops not.
 #pragma once
 #include <cstdint>
+#include <stdexcept>
 #include <vector>
 
 struct Edge {
@@ -12,7 +13,15 @@ struct Graph {
     int n = 0;
     std::vector<Edge> edges;
 
-    void addEdge(int u, int v) { edges.push_back({u, v}); }
+    // Rejects out-of-range endpoints and self-loops here, once, so no
+    // algorithm ever indexes outside [0, n). Found via the Stoer-Wagner
+    // attack prompt (see ai-logs/attack-stoer-wagner.md).
+    void addEdge(int u, int v) {
+        if (u < 0 || v < 0 || u >= n || v >= n)
+            throw std::invalid_argument("edge endpoint outside [0, n)");
+        if (u == v) throw std::invalid_argument("self-loops are not allowed");
+        edges.push_back({u, v});
+    }
 };
 
 // side[i] is 0 or 1. Both sides must be non-empty for a valid cut.
