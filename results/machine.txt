@@ -1,0 +1,4 @@
+Darwin Lazizbeks-MacBook-Air.local 27.2.0 Darwin Kernel Version 27.2.0: Wed Oct 14 23:43:44 PDT 2026; root:xnu-13432.41.4~25/RELEASE_ARM64_T8122 arm64
+Apple M3
+Apple clang version 21.0.0 (clang-2100.3.34.2)
+flags: -std=c++23 -O2 -Wall -Wextra
