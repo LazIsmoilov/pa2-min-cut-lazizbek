@@ -31,3 +31,9 @@ g++ -std=c++23 -O2 -Wall -Wextra scripts/trace_sw.cpp -o build/trace_sw
 g++ -std=c++23 -O2 -Wall -Wextra tests/test_attack.cpp -o build/test_attack
 ./build/test_attack
 ```
+
+### Generator tests
+```
+g++ -std=c++23 -O2 -Wall -Wextra tests/test_generators.cpp -o build/test_gen
+./build/test_gen
+```
