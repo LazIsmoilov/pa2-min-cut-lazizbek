@@ -28,13 +28,21 @@
 
 // If trace is non-null, each phase's order and cut are printed to it
 // (used for the hand-trace in notes.md; off in tests and benchmarks).
-// If vertexScans is non-null, it gets the total number of vertex visits in
-// the two inner loops (find-max and key update). This is the work the O(n^3)
-// bound counts, so the benchmark can check it really doesn't depend on m.
+// If stats is non-null, it collects operation counts used to test explanations:
+//   vertexScans: vertex visits in the two inner loops (find-max and key
+//                update). This is the work the O(n^3) bound counts.
+//   pickChanges: how often the find-max loop replaces its current best.
+//                Same scans, but more replacements = less predictable work.
+// The benchmark counts in a separate untimed run and times with stats = null.
+struct SWStats {
+    int64_t vertexScans = 0;
+    int64_t pickChanges = 0;
+};
+
 // Throws std::invalid_argument if n < 2: no cut exists, and without this
 // check the phase loop never runs and it returns INT64_MAX with an empty side.
 inline MinCutResult stoerWagnerMinCut(const Graph& g, FILE* trace = nullptr,
-                                      int64_t* vertexScans = nullptr) {
+                                      SWStats* stats = nullptr) {
     if (g.n < 2) throw std::invalid_argument("min cut needs n >= 2");
     const int n = g.n;
 
@@ -68,10 +76,13 @@ inline MinCutResult stoerWagnerMinCut(const Graph& g, FILE* trace = nullptr,
         for (size_t added = 0; added < active.size(); ++added) {
             // Pick the not-yet-added vertex with the largest key.
             // Ties go to whichever comes first in `active`.
-            if (vertexScans) *vertexScans += 2 * (int64_t)active.size();
+            if (stats) stats->vertexScans += 2 * (int64_t)active.size();
             int pick = -1;
             for (int v : active)
-                if (!inA[v] && (pick == -1 || key[v] > key[pick])) pick = v;
+                if (!inA[v] && (pick == -1 || key[v] > key[pick])) {
+                    pick = v;
+                    if (stats) ++stats->pickChanges;
+                }
             // Can't happen (one vertex is always left unadded here), but GCC
             // can't prove it and warns. Stating the invariant keeps the build clean.
             if (pick < 0) throw std::logic_error("Stoer-Wagner: no vertex left to add");

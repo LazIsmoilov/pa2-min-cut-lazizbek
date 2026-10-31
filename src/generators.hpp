@@ -141,6 +141,19 @@ inline Graph genComplete(int n) {
     return g;
 }
 
+// Same graph, vertices renumbered by a random permutation. The min cut value
+// and every degree are unchanged; only the vertex order differs. Used to test
+// whether Stoer-Wagner's speed depends on vertex order rather than structure.
+inline Graph relabelRandomly(const Graph& g, uint64_t seed) {
+    std::vector<int> perm(g.n);
+    for (int i = 0; i < g.n; ++i) perm[i] = i;
+    std::mt19937_64 rng(seed);
+    std::shuffle(perm.begin(), perm.end(), rng);
+    Graph h{g.n, {}};
+    for (const Edge& e : g.edges) h.addEdge(perm[e.u], perm[e.v]);
+    return h;
+}
+
 inline Graph generate(const std::string& family, int n, uint64_t seed) {
     if (family == "sparse") return genSparse(n, seed);
     if (family == "dense") return genDense(n, seed);

@@ -21,7 +21,10 @@
 //                     because it gets slow fast. Used to check that
 //                     per-trial cost x trials predicts the real total.
 //   - Operation counts are recorded next to times so explanations can be
-//     tested: Stoer-Wagner vertex scans, Karger edges scanned per trial.
+//     tested: Stoer-Wagner vertex scans / pick changes, Karger edges scanned
+//     per trial. Stoer-Wagner counts come from a separate untimed run.
+//   - Experiments: 1 scaling with n per family, 2 vary m at fixed n,
+//     3 Stoer-Wagner on the same graph with original vs relabelled vertices.
 //
 // Usage: ./build/bench          full run (the one in the report)
 //        ./build/bench --quick  small smoke run to check everything works
@@ -47,15 +50,16 @@ struct Config {
     int fullKargerReps;
     int varyMn;
     std::vector<int64_t> varyMm;
+    int orderN;
 };
 
 static Config fullConfig() {
     return {{32, 48, 64, 96, 128, 192, 256, 384, 512, 768, 1024},
-            11, 3, 1000, 128, 5, 256, {1024, 2048, 4096, 8192, 16320}};
+            11, 3, 1000, 128, 5, 256, {1024, 2048, 4096, 8192, 16320}, 1024};
 }
 
 static Config quickConfig() {
-    return {{32, 64, 128}, 3, 2, 200, 64, 2, 64, {256, 512, 1008}};
+    return {{32, 64, 128}, 3, 2, 200, 64, 2, 64, {256, 512, 1008}, 128};
 }
 
 static volatile int64_t sink = 0;  // stops the optimiser removing timed work
@@ -135,16 +139,21 @@ static int64_t checkAndMeasureSuccess(const Graph& g, const std::string& family,
     return sw.value;
 }
 
+// Operation counts come from one untimed run; the timed runs pass no stats
+// pointer, so counting can't affect the times. `opsPick` selects which count
+// goes in the ops column (vertex scans normally, pick changes for sw_order).
 static void timeStoerWagner(const Graph& g, const char* experiment,
                             const std::string& family, int instance, int reps,
-                            FILE* timing) {
-    sink += stoerWagnerMinCut(g).value;  // warm-up
+                            FILE* timing, const char* algo = "stoer_wagner",
+                            bool opsPick = false) {
+    SWStats stats;
+    sink += stoerWagnerMinCut(g, nullptr, &stats).value;  // counting run, doubles as warm-up
+    const double ops = opsPick ? (double)stats.pickChanges : (double)stats.vertexScans;
     for (int rep = 0; rep < reps; ++rep) {
-        int64_t scans = 0, value = 0;
-        double s = timeIt([&] { value = stoerWagnerMinCut(g, nullptr, &scans).value; });
+        int64_t value = 0;
+        double s = timeIt([&] { value = stoerWagnerMinCut(g).value; });
         sink += value;
-        timingRow(timing, experiment, family, g, instance, "stoer_wagner", rep, 1, s,
-                  (double)scans, value);
+        timingRow(timing, experiment, family, g, instance, algo, rep, 1, s, ops, value);
     }
 }
 
@@ -236,6 +245,29 @@ int main(int argc, char** argv) {
             timeKargerTrial(g, "vary_m", "gnm", inst, cfg.reps, mix(seed, 11), timing);
             std::fflush(timing);
         }
+    }
+
+    // Experiment 3: same graph, original vs randomly relabelled vertices.
+    // Added after experiment 1 showed Stoer-Wagner times differing between
+    // families at equal n despite identical vertex-scan counts. Relabelling
+    // keeps the graph (and the work count) identical and changes only vertex
+    // order, so any time difference is due to order, not structure.
+    // ops column = pick changes in the find-max loop.
+    for (size_t fi = 0; fi < families.size(); ++fi) {
+        const std::string& family = families[fi];
+        const int n = cfg.orderN;
+        Graph g = generate(family, n, mix(mix(fi + 1, n), 1));  // instance 0 of experiment 1
+        std::fprintf(stderr, "sw_order %-9s n=%-5d m=%-7zu\n", family.c_str(), n, g.edges.size());
+        std::fflush(stderr);
+        const int64_t expected = stoerWagnerMinCut(g).value;
+        timeStoerWagner(g, "sw_order", family, 0, cfg.reps, timing, "sw_original", true);
+        for (int inst = 0; inst < cfg.instances; ++inst) {
+            Graph h = relabelRandomly(g, mix(777, inst + 1));
+            if (stoerWagnerMinCut(h).value != expected)
+                die("relabelling changed the min cut of " + family);
+            timeStoerWagner(h, "sw_order", family, inst, cfg.reps, timing, "sw_relabelled", true);
+        }
+        std::fflush(timing);
     }
 
     std::fclose(timing);

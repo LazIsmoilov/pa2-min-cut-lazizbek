@@ -114,6 +114,23 @@ int main() {
         report("neartie: every degree is 6 or 7", mn == 6 && mx == 7);
     }
 
+    std::printf("\n== relabelRandomly keeps the graph, changes the order ==\n");
+    {
+        bool ok = true;
+        for (const auto& f : families) {
+            Graph g = generate(f, 64, 1), h = relabelRandomly(g, 9);
+            std::vector<int> dg(g.n, 0), dh(h.n, 0);
+            for (const Edge& e : g.edges) { ++dg[e.u]; ++dg[e.v]; }
+            for (const Edge& e : h.edges) { ++dh[e.u]; ++dh[e.v]; }
+            std::sort(dg.begin(), dg.end());
+            std::sort(dh.begin(), dh.end());
+            ok &= h.n == g.n && h.edges.size() == g.edges.size() && dg == dh &&
+                  isConnected(h) && !hasDuplicateEdges(h) &&
+                  stoerWagnerMinCut(h).value == stoerWagnerMinCut(g).value;
+        }
+        report("relabel: same n, m, degrees, min cut", ok);
+    }
+
     std::printf("\n%s (%d failure%s)\n", failures ? "FAILED" : "ALL PASSED",
                 failures, failures == 1 ? "" : "s");
     return failures ? EXIT_FAILURE : EXIT_SUCCESS;
