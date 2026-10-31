@@ -78,7 +78,40 @@
 | cycle | 93.8 | 95.8 | 96.9 | 97.9 | 98.4 | 99.0 | 99.2 | 99.5 | 99.6 | 99.7 | 99.8 |
 | complete | 9.6 | 7.2 | 5.8 | 4.3 | 3.4 | 2.5 | 2.0 | 1.4 | 1.1 | 0.8 | 0.6 |
 
-## Table 6. Stoer-Wagner: same graph, original vs relabelled vertex order
+## Table 6. Testing the explanation for Karger's success rate on planted cuts
+
+Model: a trial succeeds iff none of the k planted cross edges falls in the
+first S positions of the shuffled order, where S = measured edges scanned
+per trial. Predicted p = (1 - S/m)^k. Compared with the measured p and its 95% CI.
+
+| family | k | n | m | S (edges scanned) | S / m | predicted p | measured p (95% CI) | inside CI? |
+|---|---|---|---|---|---|---|---|---|
+| clusters | 3 | 32 | 123 | 47 | 0.384 | 0.233 | 0.172 (0.159-0.186) | no |
+| clusters | 3 | 48 | 279 | 83 | 0.296 | 0.349 | 0.300 (0.284-0.317) | no |
+| clusters | 3 | 64 | 499 | 123 | 0.246 | 0.428 | 0.382 (0.365-0.400) | no |
+| clusters | 3 | 96 | 1131 | 211 | 0.186 | 0.539 | 0.512 (0.494-0.530) | no |
+| clusters | 3 | 128 | 2019 | 306 | 0.152 | 0.610 | 0.587 (0.569-0.604) | no |
+| clusters | 3 | 192 | 4563 | 516 | 0.113 | 0.698 | 0.691 (0.674-0.707) | yes |
+| clusters | 3 | 256 | 8131 | 731 | 0.090 | 0.754 | 0.736 (0.720-0.752) | no |
+| clusters | 3 | 384 | 18339 | 1194 | 0.065 | 0.817 | 0.810 (0.796-0.824) | yes |
+| clusters | 3 | 512 | 32643 | 1691 | 0.052 | 0.852 | 0.856 (0.843-0.868) | yes |
+| clusters | 3 | 768 | 73539 | 2722 | 0.037 | 0.893 | 0.888 (0.876-0.899) | yes |
+| clusters | 3 | 1024 | 130819 | 3784 | 0.029 | 0.916 | 0.909 (0.898-0.918) | yes |
+| neartie | 5 | 32 | 101 | 42 | 0.413 | 0.070 | 0.044 (0.037-0.052) | no |
+| neartie | 5 | 48 | 149 | 67 | 0.450 | 0.050 | 0.034 (0.028-0.041) | no |
+| neartie | 5 | 64 | 197 | 93 | 0.474 | 0.040 | 0.024 (0.019-0.030) | no |
+| neartie | 5 | 96 | 293 | 149 | 0.509 | 0.028 | 0.020 (0.015-0.025) | no |
+| neartie | 5 | 128 | 389 | 207 | 0.532 | 0.022 | 0.012 (0.009-0.017) | no |
+| neartie | 5 | 192 | 581 | 327 | 0.563 | 0.016 | 0.008 (0.005-0.011) | no |
+| neartie | 5 | 256 | 773 | 450 | 0.582 | 0.013 | 0.006 (0.004-0.010) | no |
+| neartie | 5 | 384 | 1157 | 707 | 0.611 | 0.009 | 0.004 (0.002-0.007) | no |
+| neartie | 5 | 512 | 1541 | 969 | 0.629 | 0.007 | 0.005 (0.003-0.008) | yes |
+| neartie | 5 | 768 | 2309 | 1507 | 0.653 | 0.005 | 0.002 (0.001-0.004) | no |
+| neartie | 5 | 1024 | 3077 | 2053 | 0.667 | 0.004 | 0.003 (0.002-0.006) | yes |
+
+Model prediction inside the measured 95% CI in 7 of 22 rows.
+
+## Table 7. Stoer-Wagner: same graph, original vs relabelled vertex order
 
 | family | original: time (IQR) | original: pick changes | relabelled: time (IQR) | relabelled: pick changes (mean of instances) | time ratio relabelled / original |
 |---|---|---|---|---|---|

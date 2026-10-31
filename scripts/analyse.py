@@ -320,7 +320,24 @@ def main():
         d = ss[ss.family == f].sort_values("n")
         lines.append(f"| {f} | " + " | ".join(f"{100 * sc / m:.1f}" for sc, m in zip(d.scanned, d.m)) + " |")
 
-    lines += ["", "## Table 6. Stoer-Wagner: same graph, original vs relabelled vertex order", "",
+    lines += ["", "## Table 6. Testing the explanation for Karger's success rate on planted cuts", "",
+              "Model: a trial succeeds iff none of the k planted cross edges falls in the",
+              "first S positions of the shuffled order, where S = measured edges scanned",
+              "per trial. Predicted p = (1 - S/m)^k. Compared with the measured p and its 95% CI.", "",
+              "| family | k | n | m | S (edges scanned) | S / m | predicted p | measured p (95% CI) | inside CI? |",
+              "|---|---|---|---|---|---|---|---|---|"]
+    model_hits, model_total = 0, 0
+    for f, k in (("clusters", 3), ("neartie", 5)):
+        for _, r in ss[ss.family == f].sort_values("n").iterrows():
+            pred = (1 - r.scanned / r.m) ** k
+            inside = r.p_lo <= pred <= r.p_hi
+            model_hits += inside
+            model_total += 1
+            lines.append(f"| {f} | {k} | {int(r.n)} | {int(r.m)} | {r.scanned:.0f} | {r.scanned / r.m:.3f} | "
+                         f"{pred:.3f} | {r.p:.3f} ({r.p_lo:.3f}-{r.p_hi:.3f}) | {'yes' if inside else 'no'} |")
+    lines += ["", f"Model prediction inside the measured 95% CI in {model_hits} of {model_total} rows."]
+
+    lines += ["", "## Table 7. Stoer-Wagner: same graph, original vs relabelled vertex order", "",
               "| family | original: time (IQR) | original: pick changes | relabelled: time (IQR) | relabelled: pick changes (mean of instances) | time ratio relabelled / original |",
               "|---|---|---|---|---|---|"]
     o = t[t.experiment == "sw_order"]
@@ -355,6 +372,7 @@ def main():
         "success_ratio_to_bound_min": float(ss.ratio.min()),
         "success_ratio_to_bound_max": float(ss.ratio[np.isfinite(ss.ratio)].max()),
         "sw_order": order_rows,
+        "success_model_inside_ci": [int(model_hits), int(model_total)],
         "sw_pick_changes_vs_time_correlation": pick_time_corr,
         "families_where_measured_karger_beats_sw_at_nmax":
             sorted(x[(x.n == nmax) & (x.karger_measured < x.sw)].family.tolist()),

@@ -47,6 +47,10 @@
       "relab_picks": 699050.0
     }
   },
+  "success_model_inside_ci": [
+    7,
+    22
+  ],
   "sw_pick_changes_vs_time_correlation": 0.7471072260839273,
   "families_where_measured_karger_beats_sw_at_nmax": [
     "clusters",
