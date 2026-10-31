@@ -37,3 +37,14 @@ g++ -std=c++23 -O2 -Wall -Wextra tests/test_attack.cpp -o build/test_attack
 g++ -std=c++23 -O2 -Wall -Wextra tests/test_generators.cpp -o build/test_gen
 ./build/test_gen
 ```
+
+## Quick start (Makefile)
+```
+make          # build all tests, the benchmark and the trace tool
+make test     # run every test suite (each should print ALL PASSED)
+make quick    # ~1 min smoke benchmark -> results/quick/ (not committed)
+make bench    # full benchmark used in the report -> results/timing.csv,
+              # results/success.csv, results/machine.txt (several minutes)
+```
+The benchmark checks every answer before timing it and aborts on any mismatch
+(see the comment at the top of bench/bench.cpp for the full method).

@@ -40,18 +40,25 @@ inline int64_t kargerTrialsForConfidence(int n) {
 // don't reallocate every time.
 // Edge indices are size_t so graphs with more than INT_MAX edges don't
 // overflow the index (attack prompt, minor finding).
+// If edgesScanned is non-null, the number of edges looked at before reaching
+// 2 blobs is added to it (used by the benchmark to test explanations; it
+// doesn't change what the trial does).
 inline MinCutResult kargerTrial(const Graph& g, std::mt19937_64& rng,
-                                std::vector<size_t>& order) {
+                                std::vector<size_t>& order,
+                                int64_t* edgesScanned = nullptr) {
     order.resize(g.edges.size());
     for (size_t i = 0; i < order.size(); ++i) order[i] = i;
     std::shuffle(order.begin(), order.end(), rng);
 
     UnionFind uf(g.n);
+    int64_t scanned = 0;
     for (size_t idx : order) {
         if (uf.components() == 2) break;
         const Edge& e = g.edges[idx];
         uf.unite(e.u, e.v);  // no-op if already merged (self-loop)
+        ++scanned;
     }
+    if (edgesScanned) *edgesScanned += scanned;
 
     // If the graph is disconnected we may finish with more than 2 blobs.
     // Putting vertex 0's blob on side 0 and everything else on side 1 then

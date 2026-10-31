@@ -28,9 +28,13 @@
 
 // If trace is non-null, each phase's order and cut are printed to it
 // (used for the hand-trace in notes.md; off in tests and benchmarks).
+// If vertexScans is non-null, it gets the total number of vertex visits in
+// the two inner loops (find-max and key update). This is the work the O(n^3)
+// bound counts, so the benchmark can check it really doesn't depend on m.
 // Throws std::invalid_argument if n < 2: no cut exists, and without this
 // check the phase loop never runs and it returns INT64_MAX with an empty side.
-inline MinCutResult stoerWagnerMinCut(const Graph& g, FILE* trace = nullptr) {
+inline MinCutResult stoerWagnerMinCut(const Graph& g, FILE* trace = nullptr,
+                                      int64_t* vertexScans = nullptr) {
     if (g.n < 2) throw std::invalid_argument("min cut needs n >= 2");
     const int n = g.n;
 
@@ -64,9 +68,13 @@ inline MinCutResult stoerWagnerMinCut(const Graph& g, FILE* trace = nullptr) {
         for (size_t added = 0; added < active.size(); ++added) {
             // Pick the not-yet-added vertex with the largest key.
             // Ties go to whichever comes first in `active`.
+            if (vertexScans) *vertexScans += 2 * (int64_t)active.size();
             int pick = -1;
             for (int v : active)
                 if (!inA[v] && (pick == -1 || key[v] > key[pick])) pick = v;
+            // Can't happen (one vertex is always left unadded here), but GCC
+            // can't prove it and warns. Stating the invariant keeps the build clean.
+            if (pick < 0) throw std::logic_error("Stoer-Wagner: no vertex left to add");
 
             inA[pick] = 1;
             prev = last;
