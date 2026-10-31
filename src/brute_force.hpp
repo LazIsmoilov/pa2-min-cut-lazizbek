@@ -1,5 +1,5 @@
 // Brute-force min cut: the correctness oracle.
-// Author: Laz
+// Author: Lazizbek
 //
 // Tries every way to split the vertices into two non-empty sides and keeps
 // the one with the fewest crossing edges. Vertex 0 is always fixed on side 0,

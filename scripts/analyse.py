@@ -1,6 +1,6 @@
 """Turns the committed raw data into every table and figure in the report.
 
-Author: Laz. Run from the repo root:  python3 scripts/analyse.py
+Author: Lazizbek. Run from the repo root:  python3 scripts/analyse.py
 Reads   results/timing.csv, results/success.csv
 Writes  figures/*.png, results/tables.md, results/key_numbers.json
 

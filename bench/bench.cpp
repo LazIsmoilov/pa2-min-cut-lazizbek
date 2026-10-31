@@ -1,4 +1,4 @@
-// Benchmark harness. Author: Laz
+// Benchmark harness. Author: Lazizbek
 //
 // Writes raw measurements (one row per repetition) to results/, so every
 // table and plot can be regenerated from committed data by scripts/analyse.py.

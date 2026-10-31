@@ -1,4 +1,4 @@
-# Individual reflection: Laz
+# Individual reflection: Lazizbek
 
 The thing I'll remember from this project is that writing my predictions down first actually mattered. In PA1 I explained my results after seeing them, and the feedback said I never tested those explanations. This time `predictions.md` was committed before any code existed, so when Stoer-Wagner took 342 ms on a cycle and 560 ms on a dense graph at n = 1024, I couldn't quietly decide that was what I'd expected. I had written that it would be "almost identical across families" because the array version does the same n³ work. It does: the vertex-scan count was 11,250,400 at every m. So the difference had to come from somewhere other than the amount of work.
 

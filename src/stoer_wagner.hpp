@@ -1,5 +1,5 @@
 // Stoer-Wagner deterministic global min cut (simple O(n^3) array version).
-// Primary author: Laz
+// Primary author: Lazizbek
 //
 // Works on an n x n weight matrix (parallel edges are summed into one weight).
 // Each phase:

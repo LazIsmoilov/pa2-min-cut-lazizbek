@@ -1,5 +1,5 @@
 // Union-find with path compression + union by rank.
-// Author: Laz (same structure as my PA1 optimised union-find)
+// Author: Lazizbek (same structure as my PA1 optimised union-find)
 //
 // Used by Karger to track which original vertices have been merged into
 // the same blob. components() is kept up to date so a trial knows when it

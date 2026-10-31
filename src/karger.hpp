@@ -1,5 +1,5 @@
 // Karger's randomized contraction algorithm for global min cut.
-// Primary author: Laz
+// Primary author: Lazizbek
 //
 // One trial: shuffle the edges, then walk through them merging endpoints
 // with union-find until only 2 blobs are left. Edges whose endpoints are

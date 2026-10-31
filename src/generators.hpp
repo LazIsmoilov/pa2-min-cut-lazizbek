@@ -1,4 +1,4 @@
-// Input families for the experiments. Author: Laz
+// Input families for the experiments. Author: Lazizbek
 //
 // Every generator is deterministic given (n, seed), so the harness can hand
 // the exact same instance to both algorithms and anyone can regenerate it.
