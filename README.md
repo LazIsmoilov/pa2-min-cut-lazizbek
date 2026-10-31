@@ -48,3 +48,12 @@ make bench    # full benchmark used in the report -> results/timing.csv,
 ```
 The benchmark checks every answer before timing it and aborts on any mismatch
 (see the comment at the top of bench/bench.cpp for the full method).
+
+## Analysis (tables and figures)
+Every number and figure in the report comes from this script, run on the
+committed raw data in results/timing.csv and results/success.csv.
+```
+python3 -m venv .venv
+.venv/bin/pip install -r requirements.txt
+.venv/bin/python scripts/analyse.py   # -> figures/*.png, results/tables.md, results/key_numbers.json
+```

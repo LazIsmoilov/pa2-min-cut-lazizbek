@@ -1,0 +1,58 @@
+{
+  "n_max": 1024,
+  "sw_time_at_nmax_min_s": 0.341766542,
+  "sw_time_at_nmax_max_s": 0.560114875,
+  "sw_scans_vary_m": [
+    11250400
+  ],
+  "projection_ratio_min": 0.9032929522113006,
+  "projection_ratio_max": 1.0147271616630564,
+  "success_ratio_to_bound_min": 21.65866666666667,
+  "success_ratio_to_bound_max": 523776.0,
+  "sw_order": {
+    "sparse": {
+      "orig_s": 0.549298875,
+      "relab_s": 0.552018209,
+      "orig_picks": 1724100.0,
+      "relab_picks": 1706016.6666666667
+    },
+    "dense": {
+      "orig_s": 0.5610625,
+      "relab_s": 0.56053375,
+      "orig_picks": 2655720.0,
+      "relab_picks": 2657033.3333333335
+    },
+    "clusters": {
+      "orig_s": 0.505778875,
+      "relab_s": 0.552638792,
+      "orig_picks": 2382940.0,
+      "relab_picks": 2647290.0
+    },
+    "neartie": {
+      "orig_s": 0.377880916,
+      "relab_s": 0.56407775,
+      "orig_picks": 723115.0,
+      "relab_picks": 1667610.0
+    },
+    "cycle": {
+      "orig_s": 0.340937834,
+      "relab_s": 0.553662958,
+      "orig_picks": 524799.0,
+      "relab_picks": 1041280.0
+    },
+    "complete": {
+      "orig_s": 0.442811208,
+      "relab_s": 0.4547465,
+      "orig_picks": 699050.0,
+      "relab_picks": 699050.0
+    }
+  },
+  "sw_pick_changes_vs_time_correlation": 0.7471072260839273,
+  "families_where_measured_karger_beats_sw_at_nmax": [
+    "clusters",
+    "complete",
+    "cycle",
+    "neartie",
+    "sparse"
+  ]
+}

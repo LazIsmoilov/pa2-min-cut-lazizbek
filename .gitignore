@@ -3,3 +3,4 @@ build/
 a.out
 .DS_Store
 __pycache__/results/quick/
+.venv/
