@@ -302,7 +302,7 @@ I used Claude (Anthropic) as a pair programmer and writing partner throughout, i
   - I made every commit, and I ran the adversarial chats.
   - I decided to keep going when the data contradicted prediction 3, which led to experiment 3.
 
-All AI conversations are in `ai-logs/`.
+The AI failure log and both attack-chat logs are in `ai-logs/`; the full project conversation is available on request.
 
 ### Three times the AI was wrong or misleading
 
